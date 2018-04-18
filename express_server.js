@@ -57,8 +57,12 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  let rand = generateRandomString();
+  urlDatabase[rand] = req.body.longURL;
+  // console.log(req.body);  // debug statement to see POST parameters
+  // res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
