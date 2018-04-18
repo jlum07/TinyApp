@@ -11,9 +11,20 @@
   </header>
 
   <h1>TinyApp URL Shortener</h1>
-  <h1>Show</h1>
-  <h2><%= shortURL %></h2>
 
+  <table id="show_table">
+    <tr>
+      <td><%= shortURL %></td>
+      <td><%= longURL %></td>
+    </tr>
+  </table>
+
+  <form action="/urls/<%= shortURL %>" method="POST" id="show_form">
+    <label for="longURL">Change URL:</label>
+    <!-- Consider using url for type instead of text -->
+    <input id="longURL" type="text" name="longURL" placeholder="http://" required>
+    <input type="submit" value="Submit">
+  </form>
 
 </body>
 </html>

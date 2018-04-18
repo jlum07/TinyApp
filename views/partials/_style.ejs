@@ -11,20 +11,40 @@ html {
 nav {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: 50px;
   background-color: lightgrey;
 }
 
-nav > a {
-  /*width: 100px;*/
-  padding: 0 20px;
+#nav_links a {
+  margin-left: 15px;
   text-decoration: none;
-  /*border: 1px solid black;*/
+}
+
+#nav_title {
+  font-weight: bolder;
+}
+
+#nav_user {
+  margin-right: 15px;
 }
 
 h1 {
   text-align: center;
+}
+
+table {
+  margin: 0 auto;
+}
+
+#index_table {
+  width: 80%;
+  border: 1px solid black;
+}
+
+#show_table {
+  width: 55%;
 }
 
 #tablehead {
@@ -32,22 +52,23 @@ h1 {
   border-bottom: 1px solid black; /*this doesnt work*/
 }
 
-table {
-  margin: 0 auto;
-  width: 80%;
-  border: 1px solid black;
-}
-
 td {
   padding: 5px 20px;
 }
 
+/*dont need this any more?*/
 #del_but {
   font-family: FontAwesome;
 }
 
 #new_form {
-  margin: 150px;
+  width: 501px;
+  margin: 150px auto;
+}
+
+#show_form {
+ width: 550px;
+ margin: 100px auto;
 }
 
 #longURL {
