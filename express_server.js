@@ -9,6 +9,7 @@ app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(express.static(__dirname + '/public'));
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -88,6 +89,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
 //// edit ... might be put.. put vs post
 //// maybe not because of form needs post??
+//// express/node method over ride to change to req method
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect("/urls");
@@ -96,6 +98,7 @@ app.post("/urls/:id", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   // console.log(req.params.shortURL);
   let longURL = urlDatabase[req.params.shortURL];
+  // console.log(longURL);
   res.redirect(longURL);
 });
 
