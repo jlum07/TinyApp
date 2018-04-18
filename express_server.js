@@ -15,7 +15,6 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-
 // function generateRandomString() {
 //   // return Math.random().toString(36).replace('0.', '');
 //   return Math.random().toString(36).substring(2,8);
@@ -68,6 +67,20 @@ app.post("/urls", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id };
   res.render("urls_show", templateVars);
+});
+
+/////// delete?
+app.post("/urls/:id/delete", (req, res) => {
+
+  delete urlDatabase[req.params.id];
+
+  // let templateVars = { shortURL: req.params.id };
+  // let templateVars = { urls: urlDatabase };
+  // res.render("urls", templateVars);
+
+  res.redirect("/urls");
+  // res.redirect("http://localhost:8080/urls");
+
 });
 
 app.get("/u/:shortURL", (req, res) => {
