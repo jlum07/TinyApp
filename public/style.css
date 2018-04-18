@@ -25,8 +25,17 @@ nav {
   font-size: 40px;
 }
 
-#nav_user {
+#nav_user_login, #nav_user_logout {
   margin-right: 15px;
+}
+
+#nav_user_login > form, #nav_user_logout > form{
+  display: flex;
+  align-content: center;
+}
+
+#nav_user_login input {
+  width: 150px;
 }
 
 h1 {
