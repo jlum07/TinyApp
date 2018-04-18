@@ -49,15 +49,18 @@ app.get("/", (req, res) => {
 //   res.json(urlDatabase);
 // });
 
+// Index/Main page
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
+// Add new page
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// Add new with post
 app.post("/urls", (req, res) => {
   let rand = generateRandomString();
   urlDatabase[rand] = req.body.longURL;
@@ -67,6 +70,7 @@ app.post("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+// Show page
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
@@ -75,30 +79,25 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-/////// delete?
+// Delete
 app.post("/urls/:id/delete", (req, res) => {
-
   delete urlDatabase[req.params.id];
-
-  // let templateVars = { shortURL: req.params.id };
-  // let templateVars = { urls: urlDatabase };
-  // res.render("urls", templateVars);
-
   res.redirect("/urls");
 });
 
 //// edit ... might be put.. put vs post
 //// maybe not because of form needs post??
 //// express/node method over ride to change to req method
+// Update
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect("/urls");
 });
 
+// Redirect
 app.get("/u/:shortURL", (req, res) => {
   // console.log(req.params.shortURL);
   let longURL = urlDatabase[req.params.shortURL];
-  // console.log(longURL);
   res.redirect(longURL);
 });
 

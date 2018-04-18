@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Monoton|Roboto');
 
 html {
   font-family: 'Roboto', sans-serif;
@@ -20,7 +20,9 @@ nav {
 }
 
 #nav_title {
-  font-weight: bolder;
+  font-family: 'Monoton', cursive;
+  /*font-weight: bolder;*/
+  font-size: 40px;
 }
 
 #nav_user {
@@ -29,6 +31,7 @@ nav {
 
 h1 {
   text-align: center;
+  font-size: 30px;
 }
 
 table {
