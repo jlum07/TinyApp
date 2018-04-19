@@ -9,21 +9,24 @@
     <% include partials/_header %>
   </header>
 
+
+  <% if (url.userID === user_id) { %>
   <h1>TinyApp URL Shortener</h1>
 
   <table id="show_table">
     <tr>
-      <td><%= shortURL %></td>
-      <td><%= longURL %></td>
+      <td><%= url.shortURL %></td>
+      <td><%= url.longURL %></td>
     </tr>
   </table>
 
-  <form action="/urls/<%= shortURL %>" method="POST" id="show_form">
-    <label for="longURL">Change URL:</label>
+  <form action="/urls/<%= short_URL %>" method="POST" id="show_form">
+    <label for="long_URL">Change URL:</label>
     <!-- Consider using url for type instead of text -->
-    <input id="longURL" type="text" name="longURL" value="http://" required>
+    <input id="long_URL" type="text" name="long_URL" value="http://" required>
     <input type="submit" value="Update">
   </form>
+  <% } %>
 
 </body>
 </html>

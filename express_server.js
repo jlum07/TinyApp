@@ -16,10 +16,29 @@ app.use(cookieParser());
 
 
 
+// var urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
+
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    shortURL: "b2xVn2",
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "111111"
+  },
+  "9sm5xK": {
+    shortURL: "9sm5xK",
+    longURL: "http://www.google.com",
+    userID: "111111"
+  },
+  "d5GS3l": {
+    shortURL: "d5GS3l",
+    longURL: "http://www.facebook.com",
+    userID: "222222"
+  }
 };
+
 
 const users = {
   "111111": {
@@ -31,6 +50,11 @@ const users = {
     id: "222222",
     email: "b@c.com",
     password: "fish"
+  },
+  "333333": {
+    id: "333333",
+    email: "c@d.com",
+    password: "dog"
   }
 }
 
@@ -71,6 +95,10 @@ app.get("/users.json", (req, res) => {
   res.json(users);
 });
 
+app.get("/cookie.json", (req, res) => {
+  res.json(req.cookies);
+});
+
 // Index/Main page
 app.get("/urls", (req, res) => {
   let templateVars = {
@@ -88,13 +116,33 @@ app.get("/urls/new", (req, res) => {
     user_id: req.cookies["user_id"],
     // urls: urlDatabase
   };
-  res.render("urls_new", templateVars);
+
+  if (!req.cookies["user_id"]) {
+    res.redirect("/urls");
+  } else {
+    res.render("urls_new", templateVars);
+  }
+
+
 });
 
 // Add new with post
 app.post("/urls", (req, res) => {
   let rand = generateRandomString();
-  urlDatabase[rand] = req.body.longURL;
+  urlDatabase[rand] = {
+    userID: req.cookies["user_id"],
+    shortURL: rand,
+    longURL: req.body.long_URL
+  }
+  // urlDatabase[rand].userID = req.cookies["user_id"];
+  // urlDatabase[rand].shortURL = rand;
+  // urlDatabase[rand].longURL = req.body.long_URL;
+
+  // console.log(req.cookies["user_id"]);
+  // console.log(rand);
+  // console.log(req.body.long_URL);
+
+
   // console.log(req.body);  // debug statement to see POST parameters
   // res.send("Ok");         // Respond with 'Ok' (we will replace this)
   let templateVars = {
@@ -110,8 +158,10 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     ////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id]
+    short_URL: req.params.id,
+    url: urlDatabase[req.params.id]
+    // short_URL: req.params.id,
+    // long_URL: urlDatabase[req.params.id].longURL
   };
   res.render("urls_show", templateVars);
 });
@@ -146,7 +196,7 @@ app.post("/urls/:id/delete", (req, res) => {
 //// express/node method over ride to change to req method
 // Update
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id] = req.body.longURL;
+  urlDatabase[req.params.id].longURL = req.body.long_URL;
   res.redirect("/urls");
 });
 
@@ -167,15 +217,11 @@ app.post("/login", (req, res) => {
   }
 
   for (let key in users) {
-    // console.log(++count);
-    // console.log(users[key].email, eMail);
     if (users[key].email == eMail) {
-      // console.log(1);
       if (users[key].password != pWord) {
         res.status(403).send('Password does not match.');
       } else {
         uID = key;
-        // console.log(key, uID);
         break;
       }
     }
@@ -185,20 +231,9 @@ app.post("/login", (req, res) => {
     res.status(403).send('Email not found.');
   }
 
-  // let uID = generateRandomString();
-
-  // users[uID] = {
-  //   id: uID,
-  //   email: eMail,
-  //   password: pWord
-  // }
-
   res.cookie("user_id", uID);
   res.redirect("/urls");
 
-
-
-  // res.redirect("/urls");
 });
 
 // logout
@@ -213,33 +248,43 @@ app.post("/register", (req, res) => {
   let eMail = req.body.email;
   let pWord = req.body.password;
 
+  let error = false;
+
   if (eMail == '' || pWord == '') {
+    error = true;
     res.status(400).send('You must enter both an Email and Password!!!');
   }
 
   for (let key in users) {
     if (users[key].email == eMail) {
+      error = true;
       res.status(400).send('Email has already been registered!!!');
     }
   }
 
-  let uID = generateRandomString();
+  if (error == false) {
 
-  users[uID] = {
-    id: uID,
-    email: eMail,
-    password: pWord
+    let uID = generateRandomString();
+
+    users[uID] = {
+      id: uID,
+      email: eMail,
+      password: pWord
+    }
+
+    res.cookie("user_id", uID);
+
   }
 
-  res.cookie("user_id", uID);
+
   res.redirect("/urls");
 });
 
 // Redirect
-app.get("/u/:shortURL", (req, res) => {
+app.get("/u/:short_URL", (req, res) => {
   // console.log(req.params.shortURL);
-  let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  let long_URL = urlDatabase[req.params.short_URL].longURL;
+  res.redirect(long_URL);
 });
 
 app.listen(PORT, () => {

@@ -5,42 +5,49 @@ html {
   font-size: 20px;
 }
 
+body {
+  margin: 0;
+  /*background-color: #00A5CF;*/
+}
+
 nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 50px;
+  height: 60px;
   background-color: lightgrey;
+  /*background-color: #3587A4;*/
 }
 
-#nav_links a {
-  margin-left: 15px;
+nav a {
   text-decoration: none;
+  padding: 0 15px;
+  margin: 0 15px;
+}
+
+nav a:hover {
+  background-color: grey;
+}
+
+#nav_links {
+  display: block;
+  margin-left: 15px;
 }
 
 #nav_title {
   font-family: 'Monoton', cursive;
-  /*font-weight: bolder;*/
   font-size: 40px;
 }
 
-#nav_user_login, #nav_user_logout {
+#nav_logged_in, #nav_logged_out {
+  display: block;
   margin-right: 15px;
-}
-
-#nav_user_login > form, #nav_user_logout > form{
-  display: flex;
-  align-content: center;
-}
-
-#nav_user_login input {
-  width: 150px;
 }
 
 h1 {
   text-align: center;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 table {
@@ -70,9 +77,13 @@ td {
   font-family: FontAwesome;
 }
 
+.form_heading {
+  margin-top: 150px;
+}
+
 #new_form {
-  width: 510px;
-  margin: 150px auto;
+  width: 500px;
+  margin: 25px auto;
 }
 
 #show_form {
@@ -80,10 +91,29 @@ td {
  margin: 100px auto;
 }
 
-#longURL {
-  width: 300px
+#new_longURL {
+  width: 400px
 }
 
 input {
   font-size: 20px;
+}
+
+#reg_form, #login_form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+#reg_form input, #login_form input {
+  margin: 5px 0;
+  padding: 5px;
+}
+
+.lr_textbox {
+  width: 100%;
+  width: calc(100% - 13px);
+}
+
+.lr_button {
+  width: 100%;
 }

@@ -7,29 +7,44 @@
 
   <div id="nav_title">TinyApp</div>
 
-  <% if (!user_id) { %>
-  <div id="nav_user_login">
-<!--     <form action="/login" method="POST" id="login_form">
+  <div id="nav_login">
+
+    <% if (!user_id) { %>
+
+  <!--   <div id="nav_user_login">
+    <form action="/login" method="POST" id="login_form">
       <input type="text" name="username" placeholder="username" required>
       <button type="submit"><i class="fas fa-sign-in-alt fa-2x"></i></button>
     </form>
   </div> -->
 
-  <div>
-    <a href="/login">Login</a>
+  <div id="nav_logged_in">
+    <a href="/login">Sign In</a>
     <a href="/register">Register</a>
   </div>
 
   <% } else { %>
-  <div id="nav_user_logout">
+
+  <!--   <div id="nav_user_logout">
     <form action="/logout" method="POST" id="logout_form">
-      <!-- <input type="text" name="username" placeholder="username" required> -->
-      Hello <%= user_id %>!
-      <!-- not sure if name="logout" is required in button below -->
+      Hello //uid
       <button type="submit"><i class="fas fa-sign-out-alt fa-2x"></i></button>
     </form>
+  </div> -->
+
+  <div id="nav_logged_out">
+    <!-- <a href="/logout">Sign Out</a> -->
+     <form action="/logout" method="POST" id="logout_form">
+      <input type="submit" value="Logout">
+      <!-- <button type="submit"> -->
+        <!-- <i class="fas fa-sign-out-alt fa-2x"></i> -->
+      <!-- </button> -->
+    </form>
   </div>
+
   <% } %>
+
+</div>
 
 </nav>
 

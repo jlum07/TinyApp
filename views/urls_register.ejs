@@ -9,16 +9,16 @@
     <% include partials/_header %>
   </header>
 
-  <h1>User Registration</h1>
+  <h1 class="form_heading">User Registration</h1>
 
   <form action="/register" method="POST" id="reg_form">
-    <label for="email">Email: </label>
-    <input id="longURL" type="email" name="email" placeholder="bob@example.com">
+    <!-- <label for="email">Email: </label> -->
+    <input type="email" class="lr_textbox" name="email" placeholder="Email">
     <br>
-    <label for="email">Password: </label>
-    <input id="password" type="password" name="password" required>
+    <!-- <label for="email">Password: </label> -->
+    <input type="password" class="lr_textbox" name="password" placeholder="Password" required>
     <br>
-    <input type="submit" value="Submit">
+    <input type="submit" class="lr_button" value="Register">
   </form>
 
 </body>
