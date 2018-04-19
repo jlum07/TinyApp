@@ -124,7 +124,8 @@ app.get("/urls/new", (req, res) => {
 
   ////////////////cookie > session
   if (!req.session.user_id) {
-    res.redirect("/urls");
+    // res.redirect("/urls");
+    res.redirect("/login");
   } else {
     res.render("urls_new", templateVars);
   }
@@ -292,7 +293,8 @@ app.post("/register", (req, res) => {
     }
 
     // res.cookie("user_id", uID);
-    res.session.user_id = uID;
+    // ///// res to req
+    req.session.user_id = uID;
 
   }
 
