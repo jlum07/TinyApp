@@ -15,6 +15,11 @@ var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 
+const bcrypt = require('bcrypt');
+// const password = "purple-monkey-dinosaur"; // you will probably this from req.params
+// const hashedPassword = bcrypt.hashSync(password, 10);
+
+
 
 // var urlDatabase = {
 //   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -44,17 +49,17 @@ const users = {
   "111111": {
     id: "111111",
     email: "a@b.com",
-    password: "bob"
+    hashedPassword: bcrypt.hashSync("bob", 10)
   },
   "222222": {
     id: "222222",
     email: "b@c.com",
-    password: "fish"
+    hashedPassword: bcrypt.hashSync("fish", 10)
   },
   "333333": {
     id: "333333",
     email: "c@d.com",
-    password: "dog"
+    hashedPassword: bcrypt.hashSync("dog", 10)
   }
 }
 
@@ -102,7 +107,6 @@ app.get("/cookie.json", (req, res) => {
 // Index/Main page
 app.get("/urls", (req, res) => {
   let templateVars = {
-    ///////////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
     urls: urlDatabase
   };
@@ -112,7 +116,6 @@ app.get("/urls", (req, res) => {
 // Add new page
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    ///////////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
     // urls: urlDatabase
   };
@@ -145,18 +148,20 @@ app.post("/urls", (req, res) => {
 
   // console.log(req.body);  // debug statement to see POST parameters
   // res.send("Ok");         // Respond with 'Ok' (we will replace this)
+
   let templateVars = {
-    /////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
     urls: urlDatabase
   };
   res.render("urls_index", templateVars);
+
 });
 
 // Show page
+//////////////////////////////////////////////////////////
+// redirect instead of show blank????????
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
-    ////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
     short_URL: req.params.id,
     url: urlDatabase[req.params.id]
@@ -169,7 +174,6 @@ app.get("/urls/:id", (req, res) => {
 // Register
 app.get("/register", (req, res) => {
   let templateVars = {
-    ///////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
     // urls: urlDatabase
   };
@@ -178,7 +182,6 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    //////////////////////////////////////////////////
     user_id: req.cookies["user_id"],
     // urls: urlDatabase
   };
@@ -218,21 +221,22 @@ app.post("/login", (req, res) => {
 
   for (let key in users) {
     if (users[key].email == eMail) {
-      if (users[key].password != pWord) {
-        res.status(403).send('Password does not match.');
-      } else {
+      if (bcrypt.compareSync(pWord, users[key].hashedPassword)) {
+      // if (users[key].hashedPassword != pWord) {
         uID = key;
         break;
-      }
-    }
-  }
+      } else {
+       res.status(403).send('Password does not match.');
+     }
+   }
+ }
 
-  if (uID === undefined) {
-    res.status(403).send('Email not found.');
-  }
+ if (uID === undefined) {
+  res.status(403).send('Email not found.');
+}
 
-  res.cookie("user_id", uID);
-  res.redirect("/urls");
+res.cookie("user_id", uID);
+res.redirect("/urls");
 
 });
 
@@ -247,6 +251,10 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   let eMail = req.body.email;
   let pWord = req.body.password;
+
+  const hPassword = bcrypt.hashSync(pWord, 10);
+
+  // console.log(hashedPassword);
 
   let error = false;
 
@@ -269,13 +277,12 @@ app.post("/register", (req, res) => {
     users[uID] = {
       id: uID,
       email: eMail,
-      password: pWord
+      hashedPassword: hPassword
     }
 
     res.cookie("user_id", uID);
 
   }
-
 
   res.redirect("/urls");
 });
@@ -283,8 +290,20 @@ app.post("/register", (req, res) => {
 // Redirect
 app.get("/u/:short_URL", (req, res) => {
   // console.log(req.params.shortURL);
-  let long_URL = urlDatabase[req.params.short_URL].longURL;
-  res.redirect(long_URL);
+  let long_URL;
+
+  for (sURL in urlDatabase) {
+    if (req.params.short_URL === sURL) {
+
+      long_URL = urlDatabase[req.params.short_URL].longURL;
+      res.redirect(long_URL);
+    }
+  }
+
+  if (long_URL === undefined) {
+    res.status(404).send('Short URL not found.');
+  }
+
 });
 
 app.listen(PORT, () => {
