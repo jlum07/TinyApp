@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include partials/_head %>
+</head>
+<body>
+
+  <header>
+    <% include partials/_header %>
+  </header>
+
+  <h1>User Registration</h1>
+
+
+  <div id="nav_user_login">
+
+    <form action="/login" method="POST" id="login_form">
+
+      <input type="text" name="email" placeholder="email" required>
+
+      <input type="password" name="password" placeholder="password" required>
+
+      <button type="submit"><i class="fas fa-sign-in-alt fa-2x"></i></button>
+
+    </form>
+
+  </div>
+
+
+
+
+</body>
+</html>

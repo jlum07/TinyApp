@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include partials/_head %>
+</head>
+<body>
+
+  <header>
+    <% include partials/_header %>
+  </header>
+
+  <h1>User Registration</h1>
+
+  <form action="/register" method="POST" id="reg_form">
+    <label for="email">Email: </label>
+    <input id="longURL" type="email" name="email" placeholder="bob@example.com">
+    <br>
+    <label for="email">Password: </label>
+    <input id="password" type="password" name="password" required>
+    <br>
+    <input type="submit" value="Submit">
+  </form>
+
+</body>
+</html>
