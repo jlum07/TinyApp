@@ -17,18 +17,18 @@
   <h1>TinyApp URL Shortener</h1>
     <table id="index_table">
       <tr id="tablehead">
-        <td>Short URL</td>
-        <td>Long URL</td>
-        <td>Edit</td>
-        <td>Delete</td>
+        <th class="th_left">Short URL</th>
+        <th>Long URL</th>
+        <th>Edit</th>
+        <th class="th_right">Delete</th>
       </tr>
       <% for (let key in urls) { %>
         <% if (urls[key].userID === user_id) { %>
         <tr>
           <td><%= key %></td>
           <td><%= urls[key].longURL %></td>
-          <td><a href="/urls/<%= key %>"><button><i class="far fa-edit fa-2x"></i></button></a></td>
-          <td><form method="POST" action="/urls/<%= key %>/delete?_method=DELETE"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
+          <td class="table_button"><a href="/urls/<%= key %>"><button><i class="far fa-edit fa-2x"></i></button></a></td>
+          <td class="table_button"><form method="POST" action="/urls/<%= key %>/delete?_method=DELETE"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
         </tr>
         <% } %>
       <% } %>
