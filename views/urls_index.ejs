@@ -28,7 +28,7 @@
           <td><%= key %></td>
           <td><%= urls[key].longURL %></td>
           <td><a href="/urls/<%= key %>"><button><i class="far fa-edit fa-2x"></i></button></a></td>
-          <td><form method="POST" action="/urls/<%= key %>/delete"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
+          <td><form method="POST" action="/urls/<%= key %>/delete?_method=DELETE"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
         </tr>
         <% } %>
       <% } %>

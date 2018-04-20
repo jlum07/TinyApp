@@ -1,5 +1,4 @@
 // Might need to rename to index.js?
-
 var express = require("express");
 var app = express();
 var PORT = process.env.PORT || 8080;
@@ -11,9 +10,6 @@ app.set("view engine", "ejs");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-var cookieParser = require('cookie-parser');
-app.use(cookieParser());
-
 const bcrypt = require('bcrypt');
 
 var cookieSession = require('cookie-session');
@@ -21,14 +17,12 @@ app.use(cookieSession({
   name: 'session',
   keys: ['quickbrownfox', 'thelazydog'],
   // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours exipration
 }))
 
+var methodOverride = require('method-override');
+app.use(methodOverride('_method'));
 
-// var urlDatabase = {
-//   "b2xVn2": "http://www.lighthouselabs.ca",
-//   "9sm5xK": "http://www.google.com"
-// };
 
 var urlDatabase = {
   "b2xVn2": {
@@ -44,6 +38,21 @@ var urlDatabase = {
   "d5GS3l": {
     shortURL: "d5GS3l",
     longURL: "http://www.facebook.com",
+    userID: "222222"
+  },
+  "l4s03G": {
+    shortURL: "l4s03G",
+    longURL: "http://www.reddit.com",
+    userID: "222222"
+  },
+  "k4g9YR": {
+    shortURL: "k4g9YR",
+    longURL: "http://www.youtube.com",
+    userID: "222222"
+  },
+  "L5k03G": {
+    shortURL: "L5k03G",
+    longURL: "http://www.blogto.com",
     userID: "222222"
   }
 };
@@ -67,8 +76,7 @@ const users = {
   }
 }
 
-
-// Only generates base36 string
+// Only generates base36 string .. want base62
 // function generateRandomString() {
 //   // return Math.random().toString(36).replace('0.', '');
 //   return Math.random().toString(36).substring(2,8);
@@ -82,14 +90,29 @@ function generateRandomString() {
   for (var i = 0; i < randLength; i++) {
     random += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
   }
-
   return random;
 }
 
-// console.log(generateRandomString());
+// creating a user db to pass to the browser
+// since passing entire url db doesn't sound right
+function getUserLinks(user, urlDB) {
+
+  let userDB = {};
+
+  for (key in urlDB) {
+    if (user === urlDB[key].userID) {
+      userDB[key] = urlDB[key];
+    }
+  }
+  return userDB;
+}
+
+// console.log(getUserLinks('111111', urlDatabase));
+
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  // res.end("Hello!");
+  res.redirect("/urls");
 });
 
 // app.get("/hello", (req, res) => {
@@ -104,12 +127,16 @@ app.get("/users.json", (req, res) => {
   res.json(users);
 });
 
+app.get("/user/:uID.json", (req, res) => {
+  res.json(getUserLinks(req.params.uID, urlDatabase));
+});
+
 // Index/Main page
 app.get("/urls", (req, res) => {
   let templateVars = {
     // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
-    urls: urlDatabase
+    urls: getUserLinks(req.session.user_id, urlDatabase)
   };
   res.render("urls_index", templateVars);
 });
@@ -129,38 +156,27 @@ app.get("/urls/new", (req, res) => {
   } else {
     res.render("urls_new", templateVars);
   }
-
-
 });
 
 // Add new with post
 app.post("/urls", (req, res) => {
+
   let rand = generateRandomString();
+
   urlDatabase[rand] = {
     // userID: req.cookies["user_id"],
     user_id: req.session.user_id,
     shortURL: rand,
     longURL: req.body.long_URL
   }
-  // urlDatabase[rand].userID = req.cookies["user_id"];
-  // urlDatabase[rand].shortURL = rand;
-  // urlDatabase[rand].longURL = req.body.long_URL;
-
-  // console.log(req.cookies["user_id"]);
-  // console.log(rand);
-  // console.log(req.body.long_URL);
-
-
-  // console.log(req.body);  // debug statement to see POST parameters
-  // res.send("Ok");         // Respond with 'Ok' (we will replace this)
 
   let templateVars = {
     // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
-    urls: urlDatabase
+    urls: getUserLinks(req.session.user_id, urlDatabase)
   };
-  res.render("urls_index", templateVars);
 
+  res.render("urls_index", templateVars);
 });
 
 // Show page
@@ -181,27 +197,39 @@ app.get("/urls/:id", (req, res) => {
 // Register
 app.get("/register", (req, res) => {
   let templateVars = {
-    // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
-    // urls: urlDatabase
   };
-  res.render("urls_register", templateVars);
+
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    res.render("urls_register", templateVars);
+  }
 });
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
-    // urls: urlDatabase
   };
-  res.render("urls_login", templateVars);
+  if (req.session.user_id) {
+    res.redirect("/urls");
+  } else {
+    res.render("urls_login", templateVars);
+  }
 });
 
 // Delete
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id/delete", (req, res) => {
   delete urlDatabase[req.params.id];
   res.redirect("/urls");
 });
+
+
+// Delete
+// app.post("/urls/:id/delete", (req, res) => {
+//   delete urlDatabase[req.params.id];
+//   res.redirect("/urls");
+// });
 
 //// edit ... might be put.. put vs post
 //// maybe not because of form needs post??
@@ -235,14 +263,14 @@ app.post("/login", (req, res) => {
         uID = key;
         break;
       } else {
-       res.status(403).send('Password does not match.');
-     }
-   }
- }
+        res.status(403).send('Password does not match.');
+      }
+    }
+  }
 
- if (uID === undefined) {
-  res.status(403).send('Email not found.');
-}
+  if (uID === undefined) {
+    res.status(403).send('Email not found.');
+  }
 
   // res.cookie("user_id", uID);
   req.session.user_id = uID;
@@ -253,8 +281,6 @@ app.post("/login", (req, res) => {
 
 // logout
 app.post("/logout", (req, res) => {
-
-  // res.clearCookie("user_id");
   req.session = null;
   res.redirect("/urls");
 });
@@ -265,8 +291,6 @@ app.post("/register", (req, res) => {
   let pWord = req.body.password;
 
   const hPassword = bcrypt.hashSync(pWord, 10);
-
-  // console.log(hashedPassword);
 
   let error = false;
 
@@ -292,12 +316,8 @@ app.post("/register", (req, res) => {
       hashedPassword: hPassword
     }
 
-    // res.cookie("user_id", uID);
-    // ///// res to req
     req.session.user_id = uID;
-
   }
-
   res.redirect("/urls");
 });
 
@@ -305,19 +325,15 @@ app.post("/register", (req, res) => {
 app.get("/u/:short_URL", (req, res) => {
   // console.log(req.params.shortURL);
   let long_URL;
-
   for (sURL in urlDatabase) {
     if (req.params.short_URL === sURL) {
-
       long_URL = urlDatabase[req.params.short_URL].longURL;
       res.redirect(long_URL);
     }
   }
-
   if (long_URL === undefined) {
     res.status(404).send('Short URL not found.');
   }
-
 });
 
 app.listen(PORT, () => {
