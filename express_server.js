@@ -28,32 +28,44 @@ var urlDatabase = {
   "b2xVn2": {
     shortURL: "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
-    userID: "111111"
+    userID: "111111",
+    viewCount: 405,
+    createDate: new Date(2018, 3, 19, 12, 30, 0, 0)
   },
   "9sm5xK": {
     shortURL: "9sm5xK",
     longURL: "http://www.google.com",
-    userID: "111111"
+    userID: "111111",
+    viewCount: 2832,
+    createDate: new Date(2018, 3, 12, 12, 30, 0, 0)
   },
   "d5GS3l": {
     shortURL: "d5GS3l",
     longURL: "http://www.facebook.com",
-    userID: "222222"
+    userID: "222222",
+    viewCount: 66,
+    createDate: new Date(2018, 3, 14, 12, 30, 0, 0)
   },
   "l4s03G": {
     shortURL: "l4s03G",
     longURL: "http://www.reddit.com",
-    userID: "222222"
+    userID: "222222",
+    viewCount: 34,
+    createDate: new Date(2018, 3, 6, 12, 30, 0, 0)
   },
   "k4g9YR": {
     shortURL: "k4g9YR",
     longURL: "http://www.youtube.com",
-    userID: "222222"
+    userID: "222222",
+    viewCount: 42,
+    createDate: new Date(2018, 3, 4, 12, 30, 0, 0)
   },
   "L5k03G": {
     shortURL: "L5k03G",
     longURL: "http://www.blogto.com",
-    userID: "222222"
+    userID: "222222",
+    viewCount: 7,
+    createDate: new Date(2018, 3, 23, 12, 30, 0, 0)
   }
 };
 
@@ -93,8 +105,8 @@ function generateRandomString() {
   return random;
 }
 
-// creating a user db to pass to the browser
-// since passing entire url db doesn't sound right
+// Thought it woudl be smart to create a userDB to pass into the render
+// but then found out render is done serverside and this step is not required
 function getUserLinks(user, urlDB) {
 
   let userDB = {};
@@ -107,17 +119,11 @@ function getUserLinks(user, urlDB) {
   return userDB;
 }
 
-// console.log(getUserLinks('111111', urlDatabase));
-
 
 app.get("/", (req, res) => {
   // res.end("Hello!");
   res.redirect("/urls");
 });
-
-// app.get("/hello", (req, res) => {
-//   res.end("<html><body>Hello <b>World</b></body></html>\n");
-// });
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -165,9 +171,11 @@ app.post("/urls", (req, res) => {
 
   urlDatabase[rand] = {
     // userID: req.cookies["user_id"],
-    user_id: req.session.user_id,
+    userID: req.session.user_id,
     shortURL: rand,
-    longURL: req.body.long_URL
+    longURL: req.body.long_URL,
+    viewCount: 0,
+    createDate: new Date()
   }
 
   let templateVars = {
@@ -328,6 +336,7 @@ app.get("/u/:short_URL", (req, res) => {
   for (sURL in urlDatabase) {
     if (req.params.short_URL === sURL) {
       long_URL = urlDatabase[req.params.short_URL].longURL;
+      urlDatabase[req.params.short_URL].viewCount++;
       res.redirect(long_URL);
     }
   }

@@ -11,21 +11,22 @@
 
 
   <% if (url.userID === user_id) { %>
-  <h1>TinyApp URL Shortener</h1>
+    <h1 class="table_heading">Change your URL link</h1>
 
-  <table id="show_table">
-    <tr>
-      <td><%= url.shortURL %></td>
-      <td><%= url.longURL %></td>
-    </tr>
-  </table>
+    <table id="show_table">
+      <tr>
+        <td><%= url.shortURL %></td>
+        <td><%= url.longURL %></td>
+      </tr>
+    </table>
 
-  <form action="/urls/<%= short_URL %>" method="POST" id="show_form">
-    <label for="long_URL">Change URL:</label>
-    <!-- Consider using url for type instead of text -->
-    <input id="long_URL" type="text" name="long_URL" value="http://" required>
-    <input type="submit" value="Update">
-  </form>
+    <form action="/urls/<%= short_URL %>" method="POST" id="show_form">
+      <!-- <label for="long_URL">Change URL:</label> -->
+      <!-- <h1>Change URL</h1> -->
+      <!-- Consider using url for type instead of text -->
+      <input id="long_URL" type="text" name="long_URL" value="<%= url.longURL %>" required>
+      <input type="submit" value="Update">
+    </form>
   <% } %>
 
 </body>

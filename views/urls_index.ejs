@@ -7,32 +7,54 @@
   <% include partials/_header %>
 </header>
 <body>
-  <!-- Add your EJS code here -->
 
   <% if (!user_id) { %>
-
-    <h1>Please login to view URLs</h1>
-
+    <h1 class="prompt_msg">Please login to view URLs</h1>
   <% } else { %>
-  <h1>TinyApp URL Shortener</h1>
-    <table id="index_table">
-      <tr id="tablehead">
-        <th class="th_left">Short URL</th>
-        <th>Long URL</th>
-        <th>Edit</th>
-        <th class="th_right">Delete</th>
-      </tr>
-      <% for (let key in urls) { %>
-        <% if (urls[key].userID === user_id) { %>
-        <tr>
-          <td><%= key %></td>
-          <td><%= urls[key].longURL %></td>
-          <td class="table_button"><a href="/urls/<%= key %>"><button><i class="far fa-edit fa-2x"></i></button></a></td>
-          <td class="table_button"><form method="POST" action="/urls/<%= key %>/delete?_method=DELETE"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
+    <% if (Object.keys(urls).length === 0) { %>
+      <h1 class="prompt_msg">You don't have any short URLs yet. Click New to add some.</h1>
+    <% } else { %>
+      <h1 class="table_heading">TinyApp URL Shortener</h1>
+      <table id="index_table">
+        <tr id="tablehead">
+          <th class="th_left table_text">Short URL</th>
+          <th class="table_text">Long URL</th>
+          <th class="table_num">Views</th>
+          <th class="table_num">Create Date</th>
+          <th>Share</th>
+          <th>Edit</th>
+          <th class="th_right">Delete</th>
         </tr>
+        <% for (let key in urls) { %>
+          <% if (urls[key].userID === user_id) { %>
+            <tr>
+              <td><a href="http://localhost:8080/u/<%= key %>"><%= key %></a></td>
+              <td><%= urls[key].longURL %></td>
+              <td class="table_num"><%= urls[key].viewCount %></td>
+              <td class="table_num"><%= urls[key].createDate.toLocaleDateString("en-US") %></td>
+              <td class="table_button">
+                <input class="share_input" id="<%= key %>" type="text" value="http://localhost:8080/u/<%= key %>">
+                  <button onclick="myFunction<%= key %>()">
+                    <i class="fas fa-share fa-2x"></i>
+                  </button>
+                </input>
+                <script>
+                  function myFunction<%= key %>() {
+                    var copyText<%= key %> = document.getElementById("<%= key %>");
+                    copyText<%= key %>.select();
+                    document.execCommand("Copy");
+                    alert("Copied short URL: " + copyText<%= key %>.value + " to clipboard.");
+                  }
+                </script>
+              </td>
+              <td class="table_button"><a href="/urls/<%= key %>"><button><i class="far fa-edit fa-2x"></i></button></a></td>
+              <td class="table_button"><form method="POST" action="/urls/<%= key %>/delete?_method=DELETE"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
+            </tr>
+          <% } %>
         <% } %>
-      <% } %>
+      </table>
     <% } %>
-  </table>
+  <% } %>
+
 </body>
 </html>

@@ -26,9 +26,13 @@ nav a {
   margin: 0 15px;
 }
 
-nav a:hover {
-  background-color: grey;
+a {
+  text-decoration: none;
 }
+
+/*nav a:hover {
+  background-color: grey;
+}*/
 
 #nav_links {
   display: block;
@@ -59,10 +63,22 @@ h1 {
   font-size: 25px;
 }
 
+.prompt_msg {
+  margin-top: 150px;
+}
+
+.table_heading {
+  margin-top: 100px;
+}
+
 table {
   border-spacing: 0;
   margin: 0 auto;
 }
+
+/*.text_th {
+  text-align: left;
+}*/
 
 #tablehead {
   background-color: #F2F3F4;
@@ -76,7 +92,8 @@ table {
 }
 
 #show_table {
-  width: 40%;
+  width: 500px;
+  text-align: center;
 }
 
 #th {
@@ -96,11 +113,22 @@ th, td {
   padding: 5px 20px;
 }
 
+.table_text {
+  text-align: left;
+}
+
+.table_num {
+  text-align: right;
+}
+
 .table_button {
   text-align: center;
 }
 
-
+.share_input {
+  position: absolute;
+  left: -1000px;
+}
 
 /*dont need this any more?*/
 #del_but {
@@ -117,15 +145,16 @@ th, td {
 }
 
 #show_form {
- width: 550px;
+ width: 500px;
  margin: 100px auto;
 }
 
-#new_longURL {
-  width: 400px
+#new_longURL, #long_URL {
+  width: 375px
 }
 
 input {
+  padding: 5px 10px;
   font-size: 20px;
 }
 
