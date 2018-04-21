@@ -28,5 +28,10 @@ TinyApp is a web project URL shortener built with Node and Express.
 - An actual DB of some sort? One day I'm sure...
 - Implement tracking of unique visitor count. So far have the ground work done with cookies but need to work on the display output.
 - Possibly get rid of copy to clipboard alert. It's kind of annoying.
+<<<<<<< HEAD
 - Look into using middleware (app.all) for visitor cookie so wouldn't need to be implemented by function on route.
 - More styling... always more styling :(
+=======
+- Look into using middleware (app.all) for visitor cookie so wouldn't need to be implemented by function on all routes.
+- More styling... always more styling :(
+>>>>>>> 0fd2744969cbc6370839bacd5829a217a2d99aa8
