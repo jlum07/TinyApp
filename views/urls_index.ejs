@@ -19,7 +19,8 @@
         <tr id="tablehead">
           <th class="th_left table_text">Short URL</th>
           <th class="table_text">Long URL</th>
-          <th class="table_num">Views</th>
+          <th>Views</th>
+          <th>Unique Views</th>
           <th class="table_num">Create Date</th>
           <th>Share</th>
           <th>Edit</th>
@@ -30,7 +31,12 @@
             <tr>
               <td><a href="http://localhost:8080/u/<%= key %>"><%= key %></a></td>
               <td><%= urls[key].longURL %></td>
-              <td class="table_num"><%= urls[key].viewCount.length %></td>
+              <td class="table_button"><%= urls[key].viewCount.length %></td>
+              <td class="table_button">
+                <% let userArr = urls[key].viewCount.map(a => a.uid) %>
+                <% let uniq = a => [...new Set(a)]; %>
+                <%= uniq(userArr).length %>
+              </td>
               <td class="table_num"><%= urls[key].createDate.toLocaleDateString("en-US") %></td>
               <td class="table_button">
                 <input class="share_input" id="<%= key %>" type="text" value="http://localhost:8080/u/<%= key %>">
