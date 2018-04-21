@@ -26,11 +26,11 @@
           <th class="th_right">Delete</th>
         </tr>
         <% for (let key in urls) { %>
-          <% if (urls[key].userID === user_id) { %>
+           <!--  -->
             <tr>
               <td><a href="http://localhost:8080/u/<%= key %>"><%= key %></a></td>
               <td><%= urls[key].longURL %></td>
-              <td class="table_num"><%= urls[key].viewCount %></td>
+              <td class="table_num"><%= urls[key].viewCount.length %></td>
               <td class="table_num"><%= urls[key].createDate.toLocaleDateString("en-US") %></td>
               <td class="table_button">
                 <input class="share_input" id="<%= key %>" type="text" value="http://localhost:8080/u/<%= key %>">
@@ -50,7 +50,7 @@
               <td class="table_button"><a href="/urls/<%= key %>"><button><i class="far fa-edit fa-2x"></i></button></a></td>
               <td class="table_button"><form method="POST" action="/urls/<%= key %>/delete?_method=DELETE"><button type="submit"><i class="far fa-trash-alt fa-2x"></i></button></form></td>
             </tr>
-          <% } %>
+        <!--  -->
         <% } %>
       </table>
     <% } %>

@@ -17,7 +17,7 @@ app.use(cookieSession({
   name: 'session',
   keys: ['quickbrownfox', 'thelazydog'],
   // Cookie Options
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours exipration
+  maxAge: 7 * 24 * 60 * 60 * 1000 // 7 day exipration
 }))
 
 var methodOverride = require('method-override');
@@ -28,61 +28,75 @@ var urlDatabase = {
   "b2xVn2": {
     shortURL: "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
-    userID: "111111",
-    viewCount: 405,
+    userID: "11111111",
+    viewCount: [
+      {uid: '11111111' , date: new Date(2018, 3, 19, 12, 30, 0, 0)},
+      {uid: '22222222' , date: new Date(2018, 3, 14, 12, 30, 0, 0)}
+    ],
+    // viewUnique:
     createDate: new Date(2018, 3, 19, 12, 30, 0, 0)
   },
   "9sm5xK": {
     shortURL: "9sm5xK",
     longURL: "http://www.google.com",
-    userID: "111111",
-    viewCount: 2832,
+    userID: "11111111",
+    viewCount: [
+      {uid: '11111111' , date: new Date(2018, 3, 19, 12, 30, 0, 0)}
+    ],
     createDate: new Date(2018, 3, 12, 12, 30, 0, 0)
   },
   "d5GS3l": {
     shortURL: "d5GS3l",
     longURL: "http://www.facebook.com",
-    userID: "222222",
-    viewCount: 66,
+    userID: "22222222",
+    viewCount: [
+      {uid: '22222222' , date: new Date(2018, 3, 19, 12, 30, 0, 0)}
+    ],
     createDate: new Date(2018, 3, 14, 12, 30, 0, 0)
   },
   "l4s03G": {
     shortURL: "l4s03G",
     longURL: "http://www.reddit.com",
-    userID: "222222",
-    viewCount: 34,
+    userID: "22222222",
+    viewCount: [
+      {uid: '22222222' , date: new Date(2018, 3, 19, 12, 30, 0, 0)}
+    ],
     createDate: new Date(2018, 3, 6, 12, 30, 0, 0)
   },
   "k4g9YR": {
     shortURL: "k4g9YR",
     longURL: "http://www.youtube.com",
-    userID: "222222",
-    viewCount: 42,
+    userID: "22222222",
+    viewCount: [
+      {uid: '22222222' , date: new Date(2018, 3, 19, 12, 30, 0, 0)}
+    ],
     createDate: new Date(2018, 3, 4, 12, 30, 0, 0)
   },
   "L5k03G": {
     shortURL: "L5k03G",
     longURL: "http://www.blogto.com",
-    userID: "222222",
-    viewCount: 7,
+    userID: "22222222",
+    viewCount: [
+      {uid: '22222222' , date: new Date(2018, 3, 19, 12, 30, 0, 0)}
+    ],
     createDate: new Date(2018, 3, 23, 12, 30, 0, 0)
   }
 };
 
 
 const users = {
-  "111111": {
-    id: "111111",
+  "11111111": {
+    id: "11111111",
     email: "a@b.com",
     hashedPassword: bcrypt.hashSync("bob", 10)
   },
-  "222222": {
-    id: "222222",
+  "22222222": {
+    id: "22222222",
     email: "b@c.com",
     hashedPassword: bcrypt.hashSync("fish", 10)
   },
-  "333333": {
-    id: "333333",
+  "33333333": {
+    id: "33333333",
     email: "c@d.com",
     hashedPassword: bcrypt.hashSync("dog", 10)
   }
@@ -94,19 +108,16 @@ const users = {
 //   return Math.random().toString(36).substring(2,8);
 // }
 
-function generateRandomString() {
+function generateRandomString(len) {
   var random = "";
-  var randLength = 6;
   var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (var i = 0; i < randLength; i++) {
+  for (var i = 0; i < len; i++) {
     random += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
   }
   return random;
 }
 
-// Thought it woudl be smart to create a userDB to pass into the render
-// but then found out render is done serverside and this step is not required
 function getUserLinks(user, urlDB) {
 
   let userDB = {};
@@ -119,28 +130,40 @@ function getUserLinks(user, urlDB) {
   return userDB;
 }
 
+function checkVisitor(req) {
+  if (!req.session.visitor_id) {
+    req.session.visitor_id = generateRandomString(10);
+  }
+}
 
+// Sends get request to to /urls
 app.get("/", (req, res) => {
-  // res.end("Hello!");
+  checkVisitor(req);
   res.redirect("/urls");
 });
 
+// For debugging ULRdb
 app.get("/urls.json", (req, res) => {
+  checkVisitor(req);
   res.json(urlDatabase);
 });
 
+// For debugging Userdb
 app.get("/users.json", (req, res) => {
+  checkVisitor(req);
   res.json(users);
 });
 
+// For debugging user url db
 app.get("/user/:uID.json", (req, res) => {
+  checkVisitor();
   res.json(getUserLinks(req.params.uID, urlDatabase));
 });
 
 // Index/Main page
 app.get("/urls", (req, res) => {
+  checkVisitor(req);
   let templateVars = {
-    // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
     urls: getUserLinks(req.session.user_id, urlDatabase)
   };
@@ -149,15 +172,12 @@ app.get("/urls", (req, res) => {
 
 // Add new page
 app.get("/urls/new", (req, res) => {
+  checkVisitor(req);
   let templateVars = {
-    // user_id: req.cookies["user_id"],
-    user_id: req.session.user_id,
-    // urls: urlDatabase
-  };
+    user_id: req.session.user_id
+   };
 
-  ////////////////cookie > session
   if (!req.session.user_id) {
-    // res.redirect("/urls");
     res.redirect("/login");
   } else {
     res.render("urls_new", templateVars);
@@ -167,19 +187,18 @@ app.get("/urls/new", (req, res) => {
 // Add new with post
 app.post("/urls", (req, res) => {
 
-  let rand = generateRandomString();
+  checkVisitor(req);
+  let rand = generateRandomString(6);
 
   urlDatabase[rand] = {
-    // userID: req.cookies["user_id"],
     userID: req.session.user_id,
     shortURL: rand,
     longURL: req.body.long_URL,
-    viewCount: 0,
+    viewCount: [{}],
     createDate: new Date()
   }
 
   let templateVars = {
-    // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
     urls: getUserLinks(req.session.user_id, urlDatabase)
   };
@@ -188,22 +207,20 @@ app.post("/urls", (req, res) => {
 });
 
 // Show page
-//////////////////////////////////////////////////////////
-// redirect instead of show blank????????
 app.get("/urls/:id", (req, res) => {
+  checkVisitor(req);
   let templateVars = {
-    // user_id: req.cookies["user_id"],
     user_id: req.session.user_id,
     short_URL: req.params.id,
-    url: urlDatabase[req.params.id]
-    // short_URL: req.params.id,
-    // long_URL: urlDatabase[req.params.id].longURL
+    url: urlDatabase[req.params.id],
+    users: users
   };
   res.render("urls_show", templateVars);
 });
 
 // Register
 app.get("/register", (req, res) => {
+  checkVisitor(req);
   let templateVars = {
     user_id: req.session.user_id,
   };
@@ -216,6 +233,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  checkVisitor(req);
   let templateVars = {
     user_id: req.session.user_id,
   };
@@ -228,6 +246,7 @@ app.get("/login", (req, res) => {
 
 // Delete
 app.delete("/urls/:id/delete", (req, res) => {
+  checkVisitor(req);
   delete urlDatabase[req.params.id];
   res.redirect("/urls");
 });
@@ -244,6 +263,7 @@ app.delete("/urls/:id/delete", (req, res) => {
 //// express/node method over ride to change to req method
 // Update
 app.post("/urls/:id", (req, res) => {
+  checkVisitor(req);
   urlDatabase[req.params.id].longURL = req.body.long_URL;
   res.redirect("/urls");
 });
@@ -251,6 +271,7 @@ app.post("/urls/:id", (req, res) => {
 // login
 // user_id ..
 app.post("/login", (req, res) => {
+  checkVisitor(req);
 
   let uID;
   let eMail = req.body.email;
@@ -267,7 +288,6 @@ app.post("/login", (req, res) => {
   for (let key in users) {
     if (users[key].email == eMail) {
       if (bcrypt.compareSync(pWord, users[key].hashedPassword)) {
-      // if (users[key].hashedPassword != pWord) {
         uID = key;
         break;
       } else {
@@ -280,7 +300,6 @@ app.post("/login", (req, res) => {
     res.status(403).send('Email not found.');
   }
 
-  // res.cookie("user_id", uID);
   req.session.user_id = uID;
 
   res.redirect("/urls");
@@ -289,12 +308,15 @@ app.post("/login", (req, res) => {
 
 // logout
 app.post("/logout", (req, res) => {
-  req.session = null;
+  checkVisitor(req);
+  req.session.user_id = null;
   res.redirect("/urls");
 });
 
 // Post Register
 app.post("/register", (req, res) => {
+  checkVisitor(req);
+
   let eMail = req.body.email;
   let pWord = req.body.password;
 
@@ -316,7 +338,7 @@ app.post("/register", (req, res) => {
 
   if (error == false) {
 
-    let uID = generateRandomString();
+    let uID = generateRandomString(8);
 
     users[uID] = {
       id: uID,
@@ -331,12 +353,20 @@ app.post("/register", (req, res) => {
 
 // Redirect
 app.get("/u/:short_URL", (req, res) => {
-  // console.log(req.params.shortURL);
+  checkVisitor(req);
+
   let long_URL;
   for (sURL in urlDatabase) {
     if (req.params.short_URL === sURL) {
       long_URL = urlDatabase[req.params.short_URL].longURL;
-      urlDatabase[req.params.short_URL].viewCount++;
+      if (req.session.user_id) {
+        let tempView = {uid: req.session.user_id, date: new Date()};
+        urlDatabase[req.params.short_URL].viewCount.push(tempView);
+      } else {
+        let tempView = {uid: req.session.visitor_id, date: new Date()};
+        urlDatabase[req.params.short_URL].viewCount.push(tempView);
+      }
+
       res.redirect(long_URL);
     }
   }

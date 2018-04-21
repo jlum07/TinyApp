@@ -30,10 +30,6 @@ a {
   text-decoration: none;
 }
 
-/*nav a:hover {
-  background-color: grey;
-}*/
-
 #nav_links {
   display: block;
   margin-left: 15px;
@@ -76,9 +72,9 @@ table {
   margin: 0 auto;
 }
 
-/*.text_th {
+.text_th {
   text-align: left;
-}*/
+}
 
 #tablehead {
   background-color: #F2F3F4;
@@ -86,19 +82,23 @@ table {
 
 #index_table {
   width: 80%;
-  /*padding: 10px;*/
+
   border-radius: 10px;
   border: 1px solid black;
 }
 
 #show_table {
+  margin-top: 75px;
   width: 500px;
   text-align: center;
 }
 
+#view_list {
+  width: 700px;
+}
+
 #th {
   font-weight: bold;
-  border-bottom: 1px solid black; /*this doesnt work*/
 }
 
 .th_left {
@@ -130,14 +130,9 @@ th, td {
   left: -1000px;
 }
 
-/*dont need this any more?*/
-#del_but {
-  font-family: FontAwesome;
-}
-
-.form_heading {
+/*.form_heading {
   margin-top: 150px;
-}
+}*/
 
 #new_form {
   width: 500px;
@@ -146,7 +141,7 @@ th, td {
 
 #show_form {
  width: 500px;
- margin: 100px auto;
+ margin: 65px auto;
 }
 
 #new_longURL, #long_URL {
@@ -156,6 +151,16 @@ th, td {
 input {
   padding: 5px 10px;
   font-size: 20px;
+}
+
+#login_box, #register_box {
+  background-color: #F2F3F4;
+  padding-top: 50px;
+  margin: 0 auto;
+  margin-top: 150px;
+  height: 300px;
+  width: 500px;
+  box-shadow: 3px 3px 10px 0px #ccc;
 }
 
 #reg_form, #login_form {

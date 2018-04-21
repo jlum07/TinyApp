@@ -4,16 +4,18 @@
   <% include partials/_head %>
 </head>
 <body>
-  <!-- Add your EJS code here -->
+
   <header>
     <% include partials/_header %>
   </header>
 
-
   <% if (url.userID === user_id) { %>
-    <h1 class="table_heading">Change your URL link</h1>
 
     <table id="show_table">
+      <tr>
+        <th>Short URL</th>
+        <th>Long URL</th>
+      </tr>
       <tr>
         <td><%= url.shortURL %></td>
         <td><%= url.longURL %></td>
@@ -21,12 +23,43 @@
     </table>
 
     <form action="/urls/<%= short_URL %>" method="POST" id="show_form">
-      <!-- <label for="long_URL">Change URL:</label> -->
-      <!-- <h1>Change URL</h1> -->
-      <!-- Consider using url for type instead of text -->
+      <h1>Change your URL link</h1>
       <input id="long_URL" type="text" name="long_URL" value="<%= url.longURL %>" required>
       <input type="submit" value="Update">
     </form>
+
+    <table id="view_list">
+      <tr>
+        <th class="table_text">User ID</th>
+        <th class="table_text">Email</th>
+        <th>Date</th>
+      </tr>
+      <% for (let i = 0; i < url.viewCount.length; i++) { %>
+        <tr>
+          <td>
+            <%= url.viewCount[i].uid %>
+          </td>
+          <td>
+            <% let email = url.viewCount[i].uid %>
+            <% for (let id in users) { %>
+              <% if (email === id) {%>
+                <% email = users[id].email %>
+              <% } %>
+            <% } %>
+            <% if (email === url.viewCount[i].uid) { %>
+              Non-registered user
+            <% } else { %>
+              <%= email %>
+            <% } %>
+
+          </td>
+          <td>
+            <%= url.viewCount[i].date.toLocaleDateString("en-US") %>
+          </td>
+        </tr>
+      <% } %>
+    </table>
+
   <% } %>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
   <% include partials/_head %>
 </head>
-<!-- <body style="font-size:20px; padding:50px;"> -->
+
   <body>
     <header>
       <% include partials/_header %>
@@ -12,8 +12,6 @@
     <h1 class="form_heading">Enter a URL to shorten</h1>
 
     <form action="/urls" method="POST" id="new_form">
-      <!-- <label for="longURL">Enter a URL:</label> -->
-      <!-- Consider using url for type instead of text -->
       <input id="new_longURL" type="url" name="long_URL" value="http://" required>
       <input type="submit" value="Shorten">
     </form>
