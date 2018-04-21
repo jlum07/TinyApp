@@ -65,7 +65,7 @@ var urlDatabase = {
   },
   "k4g9YR": {
     shortURL: "k4g9YR",
-    longURL: "http://www.youtube.com",
+    longURL: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     userID: "22222222",
     viewCount: [
       {uid: '22222222' , date: new Date(2018, 3, 19, 12, 30, 0, 0)}
