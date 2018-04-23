@@ -194,7 +194,7 @@ app.post("/urls", (req, res) => {
     userID: req.session.user_id,
     shortURL: rand,
     longURL: req.body.long_URL,
-    viewCount: [{}],
+    viewCount: [],
     createDate: new Date()
   }
 
